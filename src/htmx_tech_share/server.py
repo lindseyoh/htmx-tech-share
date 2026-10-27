@@ -1,5 +1,4 @@
-import time
-from datetime import datetime
+from markupsafe import escape
 
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -22,7 +21,10 @@ next_id = 3
 
 def yap_display(text_id, text):
     return (
-        f'<li class="fade">{text}'
+        f'<li class="fade">{escape(text)}'
+
+        # hx-delete: Issues a DELETE request to the given URL
+        # https://htmx.org/docs/#triggers
         f'<button hx-delete="/yaplist/{text_id}"'
 
         # closest <CSS selector> = Tells htmx to swap AJAX response to nearest matching ancestor
@@ -37,13 +39,13 @@ def yap_display(text_id, text):
 
 @app.route('/')
 def index():
-    yap_html = "".join(yap_display(i, t) for i, t in yap_list.items())
+    yap_html = "".join(yap_display(idx, text) for idx, text in yap_list.items())
     return render_template("index.html", yap_html=yap_html)
 
 @app.route('/clicked', methods=["GET"])
 def clicky():
-    time.sleep(0.5) #artificial delay to display load
-    return f'<p>This message was generated dynamically with HTMX! Yippee!!</p>'
+    time.sleep(0.5) # unimportant, delayed the return to show the hx-indicator in action
+    return f'<p>Wowee! This message was generated dynamically via HTMX!</p>'
 
 
 @app.route('/search', methods=["GET"])
@@ -52,8 +54,7 @@ def search():
     matches = [s for s in slop_list if slop in s.lower()]
     if not matches:
         return "<li>You haven't consumed enough slop yet, poser. (No matches)</li>"
-    return "".join(f"<li>{s}</li>" for s in matches)
-
+    return "".join(f"<li>{escape(s)}</li>" for s in matches)
 
 
 @app.route('/yaplist', methods=["GET", "POST"])

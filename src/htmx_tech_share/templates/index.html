@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8">
   <title>HTMX Basics</title>
+
+  <!-- HTMX can be loaded via CDN or downloaded as a copy into your project! -->
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.11/dist/htmx.min.js" integrity="sha384-2OatzQy1H+Zd/IIrjr1TcuDGqLXeHhbooAyJY1KdQMKnr4LZ22k31GBLdYKHmVjg" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../static/css/styles.css">
 </head>
@@ -12,7 +14,14 @@
 
     <div class="container">
         <h2>Click the button!</h2>
+
+        <!-- Bare bones example: When a user clicks the button, send AJAX request to /clicked and swap HTML inside #hello div -->
+        <!-- hx-get: AJAX, Issues a GET repsonse -->
+        <!-- hx-target: Allows a response to be loaded in a different element than the one that made the request, accepts all standard CSS selectors-->
+        <!-- hx-indicator: Acts like a spinner when an AJAX request is made. I just found it fun -->
+        <!-- hx-swap: Swaps returned HTML. In this case, putting the content inside <div id='hello'> -->
         <button hx-get="/clicked" hx-target="#hello" hx-indicator="#loadloadload" hx-swap="innerHTML">Right here buddy</button>
+
         <span id="loadloadload" class="htmx-indicator">Loading.......</span>
         <div id="hello"></div>
     </div>
@@ -30,17 +39,16 @@
 
     <div class="container">
         <h2>Add n Delete</h2>
+
+        <!-- resetting user input: https://htmx.org/examples/reset-user-input/ -->
         <form hx-post="/yaplist" hx-target="#display-list" hx-swap="beforeend" hx-on::after-request="this.reset()">
             <input name="text" placeholder="Yap away bud" required>
             <button>Add</button>
         </form>
+
+        
         <ul id="display-list">{{ yap_html | safe }}</ul>
     </div>
-
-
-
-    <!-- resetting user input: https://htmx.org/examples/reset-user-input/ -->
-
 
 </body>
 </html>
