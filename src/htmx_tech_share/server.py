@@ -16,8 +16,20 @@ yap_list = {
 }
 next_id = 3
 
+
+
+@app.route('/clicked', methods=["GET"])
+def clicky():
+    time.sleep(0.5) # unimportant, delayed the return to show the hx-indicator in action :)
+    return f'<p>Wowee! This message was generated dynamically via HTMX!</p>'
+
+
+
 def yap_display(text_id, text):
     return (
+        # escape() is a good security measure when rendering HTML in flask to prevent injection attacks. Not covered in tech share
+        # read more in flask docs
+        # https://flask.palletsprojects.com/en/stable/quickstart/#html-escaping
         f'<li class="fade">{escape(text)}'
 
         # hx-delete: Issues a DELETE request to the given URL
@@ -37,21 +49,18 @@ def yap_display(text_id, text):
 @app.route('/')
 def index():
     yap_html = ""
-    
+
     for idx, text in yap_list.items():
         yap_html += yap_display(idx, text)
 
     return render_template("index.html", yap_html=yap_html)
 
-@app.route('/clicked', methods=["GET"])
-def clicky():
-    time.sleep(0.5) # unimportant, delayed the return to show the hx-indicator in action
-    return f'<p>Wowee! This message was generated dynamically via HTMX!</p>'
 
 
 @app.route('/search', methods=["GET"])
 def search():
     slop = request.args.get("slop","").strip().lower()
+    
     matches = []
 
     for s in slop_list:

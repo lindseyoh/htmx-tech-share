@@ -32,31 +32,38 @@
     <div class="container">
         <h2>Slop Search</h2>
 
-        <!-- name="slop": htmx sends the input's value under this name, so a request looks like /search?slop=solo -->
         <!-- hx-get: Sends a GET request to /search. -->
-        <!-- hx-trigger: When to send the request. Two events, separated by a comma: -->
-        <!-- "input changed delay:300ms, search" = search results automatically pop up 300ms after user stops typing -->
+        <!-- hx-trigger: When to send the request. -->
+        <!-- https://htmx.org/docs/#triggers -->
+        <!-- "input changed delay:0.35s" = search results automatically pop up 300ms after user stops typing -->
+        <!-- https://htmx.org/docs/#trigger-modifiers -->
         <!--  removing it would mean a user would have to press 'enter' for the search results to display y'know?-->
-
         <input type="search" name="slop" placeholder="Search slop here..."
-                hx-get="search"
-                hx-trigger="input changed delay:300ms, search"
+                hx-get="/search"
+                hx-trigger="input changed delay:0.35s"
                 hx-target="#results">
     
-        <!-- We made flask return <li> so we gon put it in a ul -->
         <ul id="results"></ul>
     </div>
 
     <div class="container">
         <h2>Add n Delete</h2>
 
-        <!-- resetting user input: https://htmx.org/examples/reset-user-input/ -->
+        <!-- hx-post: Sends the form to /yaplist as an AJAX POST -->
+        <!-- hx-target: What Flask returns will go into <ul id="display-list"> -->
+        <!-- hx-swap="beforeend": Add it to the end of the list. innerHTML would wipe out the existing items -->
+        <!-- https://htmx.org/docs/#swapping -->
+        <!-- hx-on::after-request: Runs a bit of JavaScript when the request finishes. this.reset() clears the form -->
+        <!-- https://htmx.org/examples/reset-user-input/ -->
         <form hx-post="/yaplist" hx-target="#display-list" hx-swap="beforeend" hx-on::after-request="this.reset()">
             <input name="text" placeholder="Yap away bud" required>
             <button>Add</button>
         </form>
 
         
+        <!-- | safe tells Jinja to insert it as real HTML instead of straight up text -->
+        <!-- not part of the tech share, but necessary if writing up HTML from Flask-->
+        <!--https://jinja.app/documentation/jinja-filters/jinja-safe-filter-function-to-disable-html-escaping -->
         <ul id="display-list">{{ yap_html | safe }}</ul>
     </div>
 
