@@ -3,9 +3,6 @@ from markupsafe import escape
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
-
-# https://htmx.org/attributes/hx-target/
-
 slop_list = [
     "That time I got reincarnated as a slime",
     "Solo Leveling",
@@ -39,7 +36,11 @@ def yap_display(text_id, text):
 
 @app.route('/')
 def index():
-    yap_html = "".join(yap_display(idx, text) for idx, text in yap_list.items())
+    yap_html = ""
+    
+    for idx, text in yap_list.items():
+        yap_html += yap_display(idx, text)
+
     return render_template("index.html", yap_html=yap_html)
 
 @app.route('/clicked', methods=["GET"])
@@ -51,7 +52,12 @@ def clicky():
 @app.route('/search', methods=["GET"])
 def search():
     slop = request.args.get("slop","").strip().lower()
-    matches = [s for s in slop_list if slop in s.lower()]
+    matches = []
+
+    for s in slop_list:
+        if slop in s.lower():
+            matches.append(s)
+
     if not matches:
         return "<li>You haven't consumed enough slop yet, poser. (No matches)</li>"
     return "".join(f"<li>{escape(s)}</li>" for s in matches)

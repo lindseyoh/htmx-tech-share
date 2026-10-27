@@ -16,12 +16,13 @@
         <h2>Click the button!</h2>
 
         <!-- Bare bones example: When a user clicks the button, send AJAX request to /clicked and swap HTML inside #hello div -->
-        <!-- hx-get: AJAX, Issues a GET repsonse -->
+        <!-- hx-get: Issues an AJAX GET request to the given URL -->
         <!-- hx-target: Allows a response to be loaded in a different element than the one that made the request, accepts all standard CSS selectors-->
-        <!-- hx-indicator: Acts like a spinner when an AJAX request is made. I just found it fun -->
-        <!-- hx-swap: Swaps returned HTML. In this case, putting the content inside <div id='hello'> -->
+        <!-- hx-indicator: Acts like a spinner (showing chosen element when request is in prorgess) when an AJAX request is made. I just found it fun -->
+        <!-- hx-swap: How the returned HTML is inserted. innderHTML (le default) replaces what's inside <div id='hello'> -->
         <button hx-get="/clicked" hx-target="#hello" hx-indicator="#loadloadload" hx-swap="innerHTML">Right here buddy</button>
-
+        
+        <!-- class="htmx-indicator" keeps this hidden until a request is running. htmx's built-in CSS fades it in and out -->
         <span id="loadloadload" class="htmx-indicator">Loading.......</span>
         <div id="hello"></div>
     </div>
@@ -30,10 +31,19 @@
 
     <div class="container">
         <h2>Slop Search</h2>
+
+        <!-- name="slop": htmx sends the input's value under this name, so a request looks like /search?slop=solo -->
+        <!-- hx-get: Sends a GET request to /search. -->
+        <!-- hx-trigger: When to send the request. Two events, separated by a comma: -->
+        <!-- "input changed delay:300ms, search" = search results automatically pop up 300ms after user stops typing -->
+        <!--  removing it would mean a user would have to press 'enter' for the search results to display y'know?-->
+
         <input type="search" name="slop" placeholder="Search slop here..."
                 hx-get="search"
                 hx-trigger="input changed delay:300ms, search"
                 hx-target="#results">
+    
+        <!-- We made flask return <li> so we gon put it in a ul -->
         <ul id="results"></ul>
     </div>
 
