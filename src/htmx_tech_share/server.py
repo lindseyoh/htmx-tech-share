@@ -60,7 +60,7 @@ def index():
 @app.route('/search', methods=["GET"])
 def search():
     slop = request.args.get("slop","").strip().lower()
-    
+
     matches = []
 
     for s in slop_list:
@@ -69,6 +69,8 @@ def search():
 
     if not matches:
         return "<li>You haven't consumed enough slop yet, poser. (No matches)</li>"
+
+    # note that escape() is used here
     return "".join(f"<li>{escape(s)}</li>" for s in matches)
 
 
