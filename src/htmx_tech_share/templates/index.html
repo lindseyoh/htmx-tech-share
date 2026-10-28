@@ -19,12 +19,12 @@
         <!-- hx-get: Issues an AJAX GET request to the given URL -->
         <!-- hx-target: Allows a response to be loaded in a different element than the one that made the request, accepts all standard CSS selectors-->
         <!-- hx-indicator: Acts like a spinner (showing chosen element when request is in prorgess) when an AJAX request is made. I just found it fun -->
-        <!-- hx-swap: How the returned HTML is inserted. innderHTML (le default) replaces what's inside <div id='hello'> -->
+        <!-- hx-swap: How the returned HTML is inserted. innerHTML is the default value, replacing what's already inside <div id='hello'> -->
         <button hx-get="/clicked" hx-target="#hello" hx-indicator="#loadloadload" hx-swap="innerHTML">Right here buddy</button>
         
         <!-- class="htmx-indicator" keeps this hidden until a request is running. htmx's built-in CSS fades it in and out -->
         <span id="loadloadload" class="htmx-indicator">Loading.......</span>
-        <div id="hello"></div>
+        <div id="hello"><br>And for my next magic trick, this text will dissappear!</div>
     </div>
 
     <line></line>
