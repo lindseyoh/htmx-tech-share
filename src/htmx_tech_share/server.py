@@ -1,4 +1,6 @@
 from markupsafe import escape
+import time
+from datetime import datetime
 
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -21,7 +23,7 @@ next_id = 3
 @app.route('/clicked', methods=["GET"])
 def clicky():
     time.sleep(0.5) # unimportant, delayed the return to show the hx-indicator in action :)
-    return f'<p>Wowee! This message was generated dynamically via HTMX!</p>'
+    return f'<p>Wowee! This message was generated dynamically via HTMX!</p><p>Server time: {datetime.now():%H:%M:%S}</p>'
 
 
 
